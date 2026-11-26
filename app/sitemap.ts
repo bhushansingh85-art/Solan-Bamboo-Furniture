@@ -1,5 +1,18 @@
 import type { MetadataRoute } from 'next';
+
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://YOUR-DOMAIN.example';
-  return ['', '/contact', ...['bamboo-chair','bamboo-lounge','woven-stool','bamboo-daybed'].map(x=>`/products/${x}`)].map(path=>({url:`${base}${path}`,lastModified:new Date(),changeFrequency:'weekly',priority:path===''?1:.7}));
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https:/solanbamboo.in';
+  return [
+    {
+      url: `${base}/`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${base}/contact`,
+      lastModified: new Date(),
+    },
+    // Keep any other product/page URLs you already had here
+  ];
 }
