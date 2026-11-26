@@ -1,2 +1,15 @@
 import type { MetadataRoute } from 'next';
-export default function robots(): MetadataRoute.Robots { const base=process.env.NEXT_PUBLIC_SITE_URL||'https://YOUR-DOMAIN.example'; return {rules:{userAgent:'*',allow:'/',disallow:'/admin'},sitemap:`${base}/sitemap.xml`}; }
+
+export const dynamic = 'force-static';
+
+export default function robots(): MetadataRoute.Robots {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://YOUR-DOMAIN.example';
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: '/admin',
+    },
+    sitemap: `${base}/sitemap.xml`,
+  };
+}
