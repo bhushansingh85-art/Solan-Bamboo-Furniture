@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+    // Public catalogue is readable; only trusted admins may manage it.
+    match /products/{productId} {
+      allow read: if resource.data.isPublished == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+    // Customers may read/write only their own profile. Admins may manage all.
+    match /customers/{uid} {
+      allow read, create, update: if signedIn() && request.auth.uid == uid;
+      allow read, write: if isAdmin();
+    }
+    // Enquiries should be created via a trusted server endpoint/Cloud Function.
+    match /enquiries/{enquiryId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
